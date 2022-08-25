@@ -1,18 +1,29 @@
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import os
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
-#driver = webdriver.Chrome(executable_path=os.popen('which chromedriver').read().strip())
-#driver = webdriver.Chrome('/Users/linushenn/Downloads')
-driver = webdriver.Chrome(ChromeDriverManager().install())
-browser = webdriver.Chrome()
 
-browser.get('http://www.yahoo.com')
-assert 'Yahoo' in browser.title
+def test_eight_components():
+    driver = webdriver.Chrome(service=ChromeService(executable_path=ChromeDriverManager().install()))
 
-elem = browser.find_element(By.NAME, 'p')  # Find the search box
-elem.send_keys('seleniumhq' + Keys.RETURN)
+    driver.get("https://www.selenium.dev/selenium/web/web-form.html")
 
-browser.quit()
+    title = driver.title
+    assert title == "Web form"
+
+    text_box = driver.find_element(by=By.NAME, value="my-text")
+    submit_button = driver.find_element(by=By.CSS_SELECTOR, value="button")
+
+    text_box.send_keys("Selenium")
+    submit_button.click()
+
+    message = driver.find_element(by=By.ID, value="message")
+    value = message.text
+    assert value == "Received!"
+
+    driver.implicitly_wait(5)
+    driver.quit()
+
+
+test_eight_components()

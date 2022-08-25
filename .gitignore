@@ -1,2 +1,4 @@
 .idea/
 RegBot/
+.DS_Store
+geckodriver.log
